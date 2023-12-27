@@ -34,9 +34,9 @@ class MainViewModel: ViewModel() {
     }
 
     fun changeEnElement(shopItem: ShopItem) {
-        //val shopItem_t = ShopItem(shopItem.name,shopItem.count,!shopItem.enabled,shopItem.id)
-        val shopItem_t2 = shopItem.copy(enabled = !shopItem.enabled)
-            editShopItemUseCase.editShopItem(shopItem_t2)
+        val shopItem_t = ShopItem(shopItem.name,shopItem.count,!shopItem.enabled,shopItem.id)
+        //val shopItem_t2 = shopItem.copy(enabled = !shopItem.enabled)
+            editShopItemUseCase.editShopItem(shopItem_t)
     }
 
 }
