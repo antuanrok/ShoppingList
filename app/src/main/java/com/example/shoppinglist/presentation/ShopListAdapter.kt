@@ -13,7 +13,12 @@ import com.example.shoppinglist.domain.ShopItem
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
 
-    var shopList = listOf<ShopItem>()
+   // var onShopItemLongClickListener: OnShopItemLongClickListener? = null
+
+    var onShopItemLongClickListener: ((ShopItem)->Unit)? = null
+    var onShopItemClickListener: ((ShopItem)->Unit)? = null
+
+            var shopList = listOf<ShopItem>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -38,9 +43,11 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         holder.tv_boug.text = "${shopItem.name}"
         holder.tv_price.text = shopItem.count.toString()
         holder.itemView.setOnLongClickListener {
-            //val pos = list.indexOf(shopItem)
-            //viewModel.changeEnElement(shopItem,position)
+            onShopItemLongClickListener?.invoke(shopItem)
             true
+        }
+        holder.itemView.setOnClickListener {
+            onShopItemClickListener?.invoke(shopItem)
         }
         /*if (shopItem.enabled) {
             holder.tv_boug.setTextColor(ContextCompat.getColor(holder.itemView.context,android.R.color.holo_red_light))
@@ -52,6 +59,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     override fun getItemCount(): Int {
         return shopList.size
     }
+
+
 
     override fun getItemViewType(position: Int): Int {
         val shopItem = shopList.get(position)
@@ -65,6 +74,12 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tv_boug = view.findViewById<TextView>(R.id.tv_boug)
         val tv_price = view.findViewById<TextView>(R.id.tv_price)
+    }
+
+
+
+    interface  OnShopItemLongClickListener{
+        fun onShopItemLongClick(shopItem: ShopItem)
     }
 
     companion object {
