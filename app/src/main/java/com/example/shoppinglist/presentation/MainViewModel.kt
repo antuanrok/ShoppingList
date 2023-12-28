@@ -33,10 +33,10 @@ class MainViewModel: ViewModel() {
         deleteShopItemUseCase.deleteShopItem(shopItem)
     }
 
-    fun changeEnElement(shopItem: ShopItem) {
+    fun changeEnElement(shopItem: ShopItem, pos: Int) {
         val shopItem_t = ShopItem(shopItem.name,shopItem.count,!shopItem.enabled,shopItem.id)
         //val shopItem_t2 = shopItem.copy(enabled = !shopItem.enabled)
-            editShopItemUseCase.editShopItem(shopItem_t)
+            editShopItemUseCase.editShopItem(shopItem_t, pos)
     }
 
 }

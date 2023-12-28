@@ -27,7 +27,7 @@
             android:background="@color/violet_dis"
             android:padding="16dp">
             <TextView
-                android:id="@+id/tv_boug_dis"
+                android:id="@+id/tv_boug"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_name_bought"
@@ -38,7 +38,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
-                android:id="@+id/tv_price_dis"
+                android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_price"
