@@ -20,22 +20,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterSL: ShopListAdapter
-    private lateinit var rvShopList: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-        setupRecyclerView(rvShopList)
-        setupOnLongClickListener()
-        setupOnClickListener()
-        setupOnSwiped(rvShopList)
+        setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             adapterSL.shopList = it
         }
     }
 
-    private fun setupRecyclerView(rvShopList: RecyclerView) {
+    private fun setupRecyclerView() {
+        val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         with(rvShopList) {
             adapterSL = ShopListAdapter()
             adapter = adapterSL
@@ -48,11 +44,9 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-        /*adapterSL.onShopItemLongClickListener = object : ShopListAdapter.OnShopItemLongClickListener {
-            override fun onShopItemLongClick(shopItem: ShopItem) {
-               viewModel.changeEnElement(shopItem)
-            }
-        }*/
+        setupOnLongClickListener()
+        setupOnClickListener()
+        setupOnSwiped(rvShopList)
     }
 
     private fun setupOnSwiped(rvShopList: RecyclerView?) {
@@ -88,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupOnLongClickListener() {
         adapterSL.onShopItemLongClickListener = {
             viewModel.changeEnElement(it)
+            //adapterSL.notifyItemChanged()
         }
     }
 
