@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setupOnSwiped(rvShopList)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            adapterSL.shopList = it
+            adapterSL.submitList(it)
         }
     }
 
@@ -48,11 +48,7 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-        /*adapterSL.onShopItemLongClickListener = object : ShopListAdapter.OnShopItemLongClickListener {
-            override fun onShopItemLongClick(shopItem: ShopItem) {
-               viewModel.changeEnElement(shopItem)
-            }
-        }*/
+
     }
 
     private fun setupOnSwiped(rvShopList: RecyclerView?) {
@@ -67,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val item = adapterSL.shopList.get(viewHolder.adapterPosition)
+                    val item = adapterSL.currentList[viewHolder.adapterPosition]
                     viewModel.deleteElement(item)
                 }
 
@@ -79,8 +75,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun  setupOnClickListener() {
         adapterSL.onShopItemClickListener = {
-            //viewModel.changeEnElement(it)
-            //Toast.makeText(context, "Id = ${it.id}", Toast.LENGTH_SHORT).show()
+
         }
     }
 

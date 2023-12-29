@@ -3,20 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="4dp">
 
 <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.0px"
-    android:elevation="4dp"
+    android:elevation="8dp"
     app:cardCornerRadius="8dp"
     android:shadowColor="@color/shadow"
-    android:padding="8dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:cardUseCompatPadding="true"
     >
