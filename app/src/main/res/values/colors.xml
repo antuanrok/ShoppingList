@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="_back_pink">#CC4488</color>
+    <color name="violet">#DD9F3ED5</color>
+    <color name="shadow">#777777</color>
+    <color name="back_shadow">#FAFAFA</color>
+    <color name="violet_dis">#779F3ED5</color>
+    <color name="back_shadow_dis">#22FAFAFA</color>
 </resources>
