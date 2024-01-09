@@ -3,4 +3,7 @@
     <string name="_name_bought">Салфетки</string>
     <string name="_price">1</string>
     <string name="add_new_shop_item">Add new shop item</string>
+    <string name="_but_OK">Save</string>
+    <string name="_name">Name:</string>
+    <string name="_count">Count:</string>
 </resources>
