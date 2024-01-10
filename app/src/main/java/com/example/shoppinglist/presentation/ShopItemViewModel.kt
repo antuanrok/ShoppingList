@@ -29,7 +29,7 @@ class ShopItemViewModel : ViewModel() {
         get() = _errorInputCount
 
     private var _shopItem = MutableLiveData<ShopItem>()
-    val shopItems: LiveData<ShopItem>
+    val shopItem: LiveData<ShopItem>
         get() = _shopItem
 
     private var _canCloseAcivity = MutableLiveData<Unit>()
@@ -52,23 +52,23 @@ class ShopItemViewModel : ViewModel() {
     }
 
     fun addElement(name: String?, count: String?) {
-        val name = parseName(name)
-        val count = parseCount(count)
-        val fieldsOk = validateInput(name, count)
+        val name_t = parseName(name)
+        val count_t = parseCount(count)
+        val fieldsOk = validateInput(name_t, count_t)
         if (fieldsOk) {
-            val shopItem = ShopItem(name, count, true)
+            val shopItem = ShopItem(name_t, count_t, true)
             addShopItemUseCase.addShopItem(shopItem)
             finishWork()
         }
     }
 
-    fun editElement(name: String?, count: String?, id: Int) {
-        val name = parseName(name)
-        val count = parseCount(count)
-        val fieldsOk = validateInput(name, count)
+    fun editElement(name: String?, count: String?) {
+        val name_t = parseName(name)
+        val count_t = parseCount(count)
+        val fieldsOk = validateInput(name_t, count_t)
         if (fieldsOk) {
             _shopItem.value?.let {
-                val item = it.copy(name=name,count = count)
+                val item = it.copy(name=name_t,count = count_t)
                 editShopItemUseCase.editShopItem(item)
                 finishWork()
             }
