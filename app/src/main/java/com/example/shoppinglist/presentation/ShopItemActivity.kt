@@ -33,35 +33,33 @@ class ShopItemActivity : AppCompatActivity() {
         parseIntent()
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         init()
-        when (mode) {
-            MODE_ADD -> launchAddMode()
-            MODE_EDIT -> launchEditMode()
-        }
+        chooseRightRegim()
+        addViewModelObserves()
+        addTextEditListeners()
+    }
 
+    private fun addViewModelObserves(){
         viewModel.errorInputName.observe(this) {
-            if (it) ti_name.error = "Name input error !"
+            if (it) ti_name.error = getString(R.string.name_input_error) else ti_name.error = null
         }
         viewModel.errorInputCount.observe(this) {
-            if (it) ti_count.error = "Count input error !"
+            if (it) ti_count.error = getString(R.string.count_input_error) else ti_count.error =
+                null
         }
 
         viewModel.canCloseAcivity.observe(this) {
             finish()
         }
+    }
 
-        viewModel.shopItem.observe(this) {
-            et_name.setText(it.name)
-            et_count.setText(it.id.toString())
-        }
-
-
-
+    private fun addTextEditListeners() {
         et_name.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.resetErrorInputName()
                 ti_name.error = null
             }
 
@@ -76,6 +74,7 @@ class ShopItemActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.resetErrorInputCount()
                 ti_count.error = null
             }
 
@@ -85,8 +84,20 @@ class ShopItemActivity : AppCompatActivity() {
         })
     }
 
+
+    private fun chooseRightRegim() {
+        when (mode) {
+            MODE_ADD -> launchAddMode()
+            MODE_EDIT -> launchEditMode()
+        }
+    }
+
     private fun launchEditMode() {
         viewModel.getShopItem(id)
+        viewModel.shopItem.observe(this) {
+            et_name.setText(it.name)
+            et_count.setText(it.id.toString())
+        }
         but_OK.setOnClickListener {
             getNameAndCount()
             viewModel.editElement(name, count)
@@ -100,7 +111,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
-    private fun getNameAndCount(){
+    private fun getNameAndCount() {
         name = et_name.text.toString()
         count = et_count.text.toString()
     }

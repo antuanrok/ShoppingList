@@ -6,4 +6,6 @@
     <string name="_but_OK">Save</string>
     <string name="_name">Name:</string>
     <string name="_count">Count:</string>
+    <string name="name_input_error">Name input error !</string>
+    <string name="count_input_error">Count input error !</string>
 </resources>
