@@ -18,8 +18,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemFragment(
-    private val mode: String = MODE_UNKNOWN,
-    private val id: Int = ShopItem.UNDEFINED_ID
 ) : Fragment() {
 
     private lateinit var ti_name: TextInputLayout
@@ -29,10 +27,15 @@ class ShopItemFragment(
     private lateinit var but_OK: Button
     private lateinit var viewModel: ShopItemViewModel
 
-    //private var mode: String = MODE_UNKNOWN
-    //private var id: Int = ShopItem.UNDEFINED_ID
+    private var mode: String = MODE_UNKNOWN
+    private var id: Int = ShopItem.UNDEFINED_ID
     private var name: String = NAME_SHOP_ITEM
     private var count: String = COUNT_SHOP_ITEM
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +47,7 @@ class ShopItemFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parseParams()
+        //parseParams()
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         init(view)
         chooseRightRegim()
@@ -132,23 +135,25 @@ class ShopItemFragment(
     }
 
     private fun parseParams() {
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
+       /* if (mode != MODE_EDIT && mode != MODE_ADD) {
             throw RuntimeException ("Param screen mode is absent")
         }
         if (mode == MODE_EDIT && id==ShopItem.UNDEFINED_ID) {
             throw RuntimeException("Params ID is not found")
-        }
-      /*  if (intent.hasExtra(EXTRA_MODE)) {
-            mode = intent.getStringExtra(EXTRA_MODE).toString()
+        }*/
+
+      val args =  requireArguments()
+      if (args.containsKey(EXTRA_MODE)) {
+            mode = args.getString(EXTRA_MODE).toString()
             if (mode == MODE_EDIT || mode == MODE_ADD) {
                 if (mode != MODE_ADD) {
-                    if (intent.hasExtra(EXTRA_MODE)) {
-                        id = intent.getIntExtra(EXTRA_ID, -1)
-                        if (id < 0) throw RuntimeException("Params ID is out of range")
+                    if (args.containsKey(EXTRA_ID)) {
+                        id = args.getInt(EXTRA_ID, ShopItem.UNDEFINED_ID)
+                        if (id < 0) throw RuntimeException("Params ID is out of range $id")
                     } else throw RuntimeException("Params ID is not found")
                 }
-            } else throw RuntimeException("Params EXTRA MODE is out of range")
-        } else throw RuntimeException("Params EXTRA MODE is not found")*/
+            } else throw RuntimeException("Params EXTRA MODE is out of range $mode")
+        } else throw RuntimeException("Params EXTRA MODE is not found")
     }
 
     private fun init(view:View) {
@@ -169,13 +174,22 @@ class ShopItemFragment(
         private const val COUNT_SHOP_ITEM = ""
 
         fun newInstanceAddItem():ShopItemFragment {
-            return ShopItemFragment(MODE_ADD)
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_MODE, MODE_ADD);
+                }
+            }
         }
         fun newInstanceEditItem(id:Int):ShopItemFragment {
-            return ShopItemFragment(MODE_EDIT, id)
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_MODE, MODE_EDIT);
+                    putInt(EXTRA_ID, id);
+                }
+            }
         }
 
-        fun newIntentAddItem(ctx: Context): Intent {
+       /* fun newIntentAddItem(ctx: Context): Intent {
             val intent = Intent(ctx, ShopItemActivity::class.java)
             intent.putExtra(EXTRA_MODE, MODE_ADD)
             return intent
@@ -186,7 +200,7 @@ class ShopItemFragment(
             intent.putExtra(EXTRA_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_ID, id)
             return intent
-        }
+        }*/
 
 
     }

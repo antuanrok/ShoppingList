@@ -152,7 +152,7 @@ class ShopItemActivity : AppCompatActivity() {
         private const val NAME_SHOP_ITEM = ""
         private const val COUNT_SHOP_ITEM = ""
 
-    /*    fun newIntentAddItem(ctx: Context): Intent {
+        fun newIntentAddItem(ctx: Context): Intent {
             val intent = Intent(ctx, ShopItemActivity::class.java)
             intent.putExtra(EXTRA_MODE, MODE_ADD)
             return intent
@@ -163,7 +163,7 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_ID, id)
             return intent
-        }*/
+        }
 
 
     }
