@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
@@ -62,7 +63,7 @@ class ShopItemFragment(
         }
 
         viewModel.canCloseAcivity.observe(viewLifecycleOwner) {
-            finish()
+            activity?.onBackPressed()
         }
     }
 
@@ -166,6 +167,13 @@ class ShopItemFragment(
         private const val MODE_UNKNOWN = ""
         private const val NAME_SHOP_ITEM = ""
         private const val COUNT_SHOP_ITEM = ""
+
+        fun newInstanceAddItem():ShopItemFragment {
+            return ShopItemFragment(MODE_ADD)
+        }
+        fun newInstanceEditItem(id:Int):ShopItemFragment {
+            return ShopItemFragment(MODE_EDIT, id)
+        }
 
         fun newIntentAddItem(ctx: Context): Intent {
             val intent = Intent(ctx, ShopItemActivity::class.java)

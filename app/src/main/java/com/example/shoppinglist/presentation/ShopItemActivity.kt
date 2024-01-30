@@ -16,29 +16,29 @@ import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemActivity : AppCompatActivity() {
 
-    private lateinit var ti_name: TextInputLayout
+    /*private lateinit var ti_name: TextInputLayout
     private lateinit var ti_count: TextInputLayout
     private lateinit var et_name: TextInputEditText
     private lateinit var et_count: TextInputEditText
     private lateinit var but_OK: Button
-    private lateinit var viewModel: ShopItemViewModel
+    private lateinit var viewModel: ShopItemViewModel*/
     private var mode: String = MODE_UNKNOWN
     private var id: Int = ShopItem.UNDEFINED_ID
-    private var name: String = NAME_SHOP_ITEM
-    private var count: String = COUNT_SHOP_ITEM
+   // private var name: String = NAME_SHOP_ITEM
+   // private var count: String = COUNT_SHOP_ITEM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
-        init()
+        /*viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
+        init()*/
         chooseRightRegim()
-        addViewModelObserves()
-        addTextEditListeners()
+       /*addViewModelObserves()
+        addTextEditListeners()*/
     }
 
-    private fun addViewModelObserves(){
+   /* private fun addViewModelObserves(){
         viewModel.errorInputName.observe(this) {
             if (it) ti_name.error = getString(R.string.name_input_error) else ti_name.error = null
         }
@@ -82,16 +82,20 @@ class ShopItemActivity : AppCompatActivity() {
 
             }
         })
-    }
+    }*/
 
 
     private fun chooseRightRegim() {
-        when (mode) {
-            MODE_ADD -> launchAddMode()
-            MODE_EDIT -> launchEditMode()
+        val fragment = when (mode) {
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(id)
+            else -> throw RuntimeException("Unknown screen mode $mode")
         }
+        supportFragmentManager.beginTransaction()
+            .add(R.id._shop_item_container,fragment)
+            .commit()
     }
-
+/*
     private fun launchEditMode() {
         viewModel.getShopItem(id)
         viewModel.shopItem.observe(this) {
@@ -115,7 +119,7 @@ class ShopItemActivity : AppCompatActivity() {
         name = et_name.text.toString()
         count = et_count.text.toString()
     }
-
+*/
     private fun parseIntent() {
         if (intent.hasExtra(EXTRA_MODE)) {
             mode = intent.getStringExtra(EXTRA_MODE).toString()
@@ -130,13 +134,14 @@ class ShopItemActivity : AppCompatActivity() {
         } else throw RuntimeException("Params EXTRA MODE is not found")
     }
 
+/*
     private fun init() {
         ti_name = findViewById(R.id._ti_name)
         ti_count = findViewById(R.id._ti_count)
         et_name = findViewById(R.id._et_name)
         et_count = findViewById(R.id._et_count)
         but_OK = findViewById(R.id._butt_ok)
-    }
+    }*/
 
     companion object {
         private const val EXTRA_MODE = "extra_mode"
@@ -147,7 +152,7 @@ class ShopItemActivity : AppCompatActivity() {
         private const val NAME_SHOP_ITEM = ""
         private const val COUNT_SHOP_ITEM = ""
 
-        fun newIntentAddItem(ctx: Context): Intent {
+    /*    fun newIntentAddItem(ctx: Context): Intent {
             val intent = Intent(ctx, ShopItemActivity::class.java)
             intent.putExtra(EXTRA_MODE, MODE_ADD)
             return intent
@@ -158,7 +163,7 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_ID, id)
             return intent
-        }
+        }*/
 
 
     }
