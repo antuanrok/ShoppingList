@@ -113,10 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun orientIsLand(): Boolean {
-        if (shopItemContainer != null) {
-            return true
-        }
-        return false
+        return shopItemContainer != null
     }
 
     private fun setupOnClickListener() {
@@ -140,8 +137,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val EXTRA_MODE = "extra_mode"
-        private const val EXTRA_ID = "extra_id"
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val TYPE_EXEC_FRAGMENT_FIRST = 0
