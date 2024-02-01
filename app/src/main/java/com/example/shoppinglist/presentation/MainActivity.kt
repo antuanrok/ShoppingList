@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentContainer
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
@@ -25,10 +27,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterSL: ShopListAdapter
     private lateinit var rvShopList: RecyclerView
+    private var shopItemContainer: FragmentContainerView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
+        shopItemContainer = findViewById(R.id._shop_item_container)
+        if (orientIsLand()) {
+            chooseRightRegim(MODE_ADD, ShopItem.UNDEFINED_ID, TYPE_EXEC_FRAGMENT_FIRST)
+        }
         setupRecyclerView(rvShopList)
         setupOnLongClickListener()
         setupOnClickListener()
@@ -37,10 +44,33 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             adapterSL.submitList(it)
         }
+
         val butAddItem = findViewById<FloatingActionButton>(R.id._but_add_shop_item)
-        butAddItem.setOnClickListener{
-            val intent = newIntentAddItem(this)
-            startActivity(intent)
+        butAddItem.setOnClickListener {
+            if (!orientIsLand()) {
+                val intent = newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                chooseRightRegim(MODE_ADD, ShopItem.UNDEFINED_ID, TYPE_EXEC_FRAGMENT_SECOND)
+            }
+        }
+    }
+
+
+    private fun chooseRightRegim(mode: String, id: Int, type: Int) {
+        val fragment = when (mode) {
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(id)
+            else -> throw RuntimeException("Unknown screen mode $mode")
+        }
+        when (type) {
+            TYPE_EXEC_FRAGMENT_FIRST -> supportFragmentManager.beginTransaction()
+                .add(R.id._shop_item_container, fragment)
+                .commit()
+
+            TYPE_EXEC_FRAGMENT_SECOND -> supportFragmentManager.beginTransaction()
+                .replace(R.id._shop_item_container, fragment)
+                .commit()
         }
     }
 
@@ -82,12 +112,23 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
 
-    private fun  setupOnClickListener() {
+    private fun orientIsLand(): Boolean {
+        if (shopItemContainer != null) {
+            return true
+        }
+        return false
+    }
+
+    private fun setupOnClickListener() {
         adapterSL.onShopItemClickListener = {
             val id = it.id
-            val intent = newIntentEditItem(this, id)
-       //     Toast.makeText(this, id,Toast.LENGTH_LONG).show()
-            startActivity(intent)
+            if (!orientIsLand()) {
+                val intent = newIntentEditItem(this, id)
+                //     Toast.makeText(this, id,Toast.LENGTH_LONG).show()
+                startActivity(intent)
+            } else {
+                chooseRightRegim(MODE_EDIT, id, TYPE_EXEC_FRAGMENT_SECOND)
+            }
         }
     }
 
@@ -96,6 +137,15 @@ class MainActivity : AppCompatActivity() {
         adapterSL.onShopItemLongClickListener = {
             viewModel.changeEnElement(it)
         }
+    }
+
+    companion object {
+        private const val EXTRA_MODE = "extra_mode"
+        private const val EXTRA_ID = "extra_id"
+        private const val MODE_EDIT = "mode_edit"
+        private const val MODE_ADD = "mode_add"
+        private const val TYPE_EXEC_FRAGMENT_FIRST = 0
+        private const val TYPE_EXEC_FRAGMENT_SECOND = 1
     }
 
 }
