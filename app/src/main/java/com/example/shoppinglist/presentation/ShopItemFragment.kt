@@ -34,7 +34,7 @@ class ShopItemFragment(
     private var count: String = COUNT_SHOP_ITEM
 
     override fun onDestroy() {
-            activityInterractor.onFragmentClosed()
+        //    activityInterractor.onFragmentClosed()
         super.onDestroy()
     }
 
@@ -42,7 +42,7 @@ class ShopItemFragment(
         super.onAttach(context)
         if (context is ActivityInterractor) {
             this.activityInterractor = context
-        }
+        } else throw RuntimeException("Activity most implement ActivityInterractor");
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +79,8 @@ class ShopItemFragment(
         }
 
         viewModel.canCloseAcivity.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            //activity?.onBackPressed()
+            activityInterractor.onFragmentClosed()
         }
     }
 
@@ -127,7 +128,7 @@ class ShopItemFragment(
         viewModel.getShopItem(id)
         viewModel.shopItem.observe(viewLifecycleOwner) {
             et_name.setText(it.name)
-            et_count.setText(it.id.toString())
+            et_count.setText(it.count.toString())
         }
         but_OK.setOnClickListener {
             getNameAndCount()
@@ -170,14 +171,16 @@ class ShopItemFragment(
         but_OK = view.findViewById(R.id._butt_ok)
     }
 
+    interface ActivityInterractor {
+        fun onFragmentClosed()
+    }
+
     companion object {
         private const val EXTRA_MODE = "extra_mode"
         private const val EXTRA_ID = "extra_id"
         private const val EXTRA_ORIENTATION = "extra_orientation"
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
-   //     const val MODE_ORIENTATION_LAND = "land"
-   //     const val MODE_ORIENTATION_BOOK = "book"
         private const val MODE_UNKNOWN = ""
         private const val NAME_SHOP_ITEM = ""
         private const val COUNT_SHOP_ITEM = ""
@@ -190,7 +193,8 @@ class ShopItemFragment(
             }
         }
 
-        fun newInstanceEditItem( id: Int): ShopItemFragment {
+        fun newInstanceEditItem(id: Int): ShopItemFragment {
+
             return ShopItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(EXTRA_MODE, MODE_EDIT);
@@ -198,19 +202,6 @@ class ShopItemFragment(
                 }
             }
         }
-
-        /* fun newIntentAddItem(ctx: Context): Intent {
-             val intent = Intent(ctx, ShopItemActivity::class.java)
-             intent.putExtra(EXTRA_MODE, MODE_ADD)
-             return intent
-         }
-
-         fun newIntentEditItem(ctx: Context, id: Int): Intent {
-             val intent = Intent(ctx, ShopItemActivity::class.java)
-             intent.putExtra(EXTRA_MODE, MODE_EDIT)
-             intent.putExtra(EXTRA_ID, id)
-             return intent
-         }*/
 
 
     }

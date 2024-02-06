@@ -15,13 +15,13 @@ import com.example.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity(), ActivityInterractor {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.ActivityInterractor{
 
     private var mode: String = MODE_UNKNOWN
     private var id: Int = ShopItem.UNDEFINED_ID
 
     override fun onFragmentClosed() {
-
+     finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +45,7 @@ class ShopItemActivity : AppCompatActivity(), ActivityInterractor {
             .replace(R.id._shop_item_container,fragment)
             .commit()
     }
+
 
     private fun parseIntent() {
         if (intent.hasExtra(EXTRA_MODE)) {

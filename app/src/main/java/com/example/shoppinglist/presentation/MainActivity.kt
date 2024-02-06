@@ -23,22 +23,23 @@ import com.example.shoppinglist.presentation.ShopItemActivity.Companion.newInten
 import com.example.shoppinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity(), ActivityInterractor {
+class MainActivity : AppCompatActivity(), ShopItemFragment.ActivityInterractor {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterSL: ShopListAdapter
     private lateinit var rvShopList: RecyclerView
     private var shopItemContainer: FragmentContainerView? = null
-    private var countF = 0
+  //  private var countF = 0
 
 
     override fun onFragmentClosed() {
+        supportFragmentManager.popBackStack()
         if (orientIsLand()) {
-            countF--
-            if (countF == 0) {
+      //      countF--
+      //      if (countF == 0) {
                 shopItemContainer?.background =
                     ContextCompat.getDrawable(applicationContext, R.drawable.buy_girl)
-            }
+       //     }
         }
     }
 
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity(), ActivityInterractor {
             adapterSL.submitList(it)
         }
 
-        countF = 0;
+      //  countF = 0;
 
         val butAddItem = findViewById<FloatingActionButton>(R.id._but_add_shop_item)
         butAddItem.setOnClickListener {
@@ -79,13 +80,14 @@ class MainActivity : AppCompatActivity(), ActivityInterractor {
             MODE_EDIT -> ShopItemFragment.newInstanceEditItem(id)
             else -> throw RuntimeException("Unknown screen mode $mode")
         }
-        countF++
+     //   countF++
         supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id._shop_item_container, fragment)
             .addToBackStack(null)
             .commit()
     }
+
 
     private fun setupRecyclerView(rvShopList: RecyclerView) {
         with(rvShopList) {
