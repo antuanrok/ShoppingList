@@ -8,81 +8,31 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ActivityInterractor {
 
-    /*private lateinit var ti_name: TextInputLayout
-    private lateinit var ti_count: TextInputLayout
-    private lateinit var et_name: TextInputEditText
-    private lateinit var et_count: TextInputEditText
-    private lateinit var but_OK: Button
-    private lateinit var viewModel: ShopItemViewModel*/
     private var mode: String = MODE_UNKNOWN
     private var id: Int = ShopItem.UNDEFINED_ID
-   // private var name: String = NAME_SHOP_ITEM
-   // private var count: String = COUNT_SHOP_ITEM
+
+    override fun onFragmentClosed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        /*viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
-        init()*/
-        chooseRightRegim()
-       /*addViewModelObserves()
-        addTextEditListeners()*/
-    }
-
-   /* private fun addViewModelObserves(){
-        viewModel.errorInputName.observe(this) {
-            if (it) ti_name.error = getString(R.string.name_input_error) else ti_name.error = null
-        }
-        viewModel.errorInputCount.observe(this) {
-            if (it) ti_count.error = getString(R.string.count_input_error) else ti_count.error =
-                null
-        }
-
-        viewModel.canCloseAcivity.observe(this) {
-            finish()
+        if (savedInstanceState == null) {
+            chooseRightRegim()
         }
     }
 
-    private fun addTextEditListeners() {
-        et_name.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputName()
-                ti_name.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-
-        et_count.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputCount()
-                ti_count.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-    }*/
 
 
     private fun chooseRightRegim() {
@@ -92,34 +42,10 @@ class ShopItemActivity : AppCompatActivity() {
             else -> throw RuntimeException("Unknown screen mode $mode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id._shop_item_container,fragment)
+            .replace(R.id._shop_item_container,fragment)
             .commit()
     }
-/*
-    private fun launchEditMode() {
-        viewModel.getShopItem(id)
-        viewModel.shopItem.observe(this) {
-            et_name.setText(it.name)
-            et_count.setText(it.id.toString())
-        }
-        but_OK.setOnClickListener {
-            getNameAndCount()
-            viewModel.editElement(name, count)
-        }
-    }
 
-    private fun launchAddMode() {
-        but_OK.setOnClickListener {
-            getNameAndCount()
-            viewModel.addElement(name, count)
-        }
-    }
-
-    private fun getNameAndCount() {
-        name = et_name.text.toString()
-        count = et_count.text.toString()
-    }
-*/
     private fun parseIntent() {
         if (intent.hasExtra(EXTRA_MODE)) {
             mode = intent.getStringExtra(EXTRA_MODE).toString()
@@ -134,14 +60,6 @@ class ShopItemActivity : AppCompatActivity() {
         } else throw RuntimeException("Params EXTRA MODE is not found")
     }
 
-/*
-    private fun init() {
-        ti_name = findViewById(R.id._ti_name)
-        ti_count = findViewById(R.id._ti_count)
-        et_name = findViewById(R.id._et_name)
-        et_count = findViewById(R.id._et_count)
-        but_OK = findViewById(R.id._butt_ok)
-    }*/
 
     companion object {
         private const val EXTRA_MODE = "extra_mode"

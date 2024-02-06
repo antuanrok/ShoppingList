@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainer
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -22,20 +23,31 @@ import com.example.shoppinglist.presentation.ShopItemActivity.Companion.newInten
 import com.example.shoppinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActivityInterractor {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterSL: ShopListAdapter
     private lateinit var rvShopList: RecyclerView
     private var shopItemContainer: FragmentContainerView? = null
+    private var countF = 0
+
+
+    override fun onFragmentClosed() {
+        if (orientIsLand()) {
+            countF--
+            if (countF == 0) {
+                shopItemContainer?.background =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.buy_girl)
+            }
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         shopItemContainer = findViewById(R.id._shop_item_container)
-        if (orientIsLand()) {
-            chooseRightRegim(MODE_ADD, ShopItem.UNDEFINED_ID, TYPE_EXEC_FRAGMENT_FIRST)
-        }
         setupRecyclerView(rvShopList)
         setupOnLongClickListener()
         setupOnClickListener()
@@ -45,33 +57,34 @@ class MainActivity : AppCompatActivity() {
             adapterSL.submitList(it)
         }
 
+        countF = 0;
+
         val butAddItem = findViewById<FloatingActionButton>(R.id._but_add_shop_item)
         butAddItem.setOnClickListener {
             if (!orientIsLand()) {
                 val intent = newIntentAddItem(this)
                 startActivity(intent)
             } else {
-                chooseRightRegim(MODE_ADD, ShopItem.UNDEFINED_ID, TYPE_EXEC_FRAGMENT_SECOND)
+                shopItemContainer?.background =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.custom_background)
+                chooseRightRegim(MODE_ADD, ShopItem.UNDEFINED_ID)
             }
         }
     }
 
 
-    private fun chooseRightRegim(mode: String, id: Int, type: Int) {
+    private fun chooseRightRegim(mode: String, id: Int) {
         val fragment = when (mode) {
             MODE_ADD -> ShopItemFragment.newInstanceAddItem()
             MODE_EDIT -> ShopItemFragment.newInstanceEditItem(id)
             else -> throw RuntimeException("Unknown screen mode $mode")
         }
-        when (type) {
-            TYPE_EXEC_FRAGMENT_FIRST -> supportFragmentManager.beginTransaction()
-                .add(R.id._shop_item_container, fragment)
-                .commit()
-
-            TYPE_EXEC_FRAGMENT_SECOND -> supportFragmentManager.beginTransaction()
-                .replace(R.id._shop_item_container, fragment)
-                .commit()
-        }
+        countF++
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id._shop_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecyclerView(rvShopList: RecyclerView) {
@@ -124,7 +137,9 @@ class MainActivity : AppCompatActivity() {
                 //     Toast.makeText(this, id,Toast.LENGTH_LONG).show()
                 startActivity(intent)
             } else {
-                chooseRightRegim(MODE_EDIT, id, TYPE_EXEC_FRAGMENT_SECOND)
+                shopItemContainer?.background =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.custom_background)
+                chooseRightRegim(MODE_EDIT, id)
             }
         }
     }
@@ -139,8 +154,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
-        private const val TYPE_EXEC_FRAGMENT_FIRST = 0
-        private const val TYPE_EXEC_FRAGMENT_SECOND = 1
     }
 
 }

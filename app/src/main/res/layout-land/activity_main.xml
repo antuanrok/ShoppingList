@@ -49,6 +49,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline_middle"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/buy_girl"
         />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
